@@ -1,0 +1,135 @@
+package org.example;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentManager {
+    private List<Student> students;
+
+    public StudentManager() {
+        this.students = new ArrayList<>();
+    }
+
+    public void addStudent(Student student) {
+        this.students.add(student);
+        System.out.println("Student added successfully.");
+    }
+
+    public Student getStudentById(String id) {
+        for (Student student : students) {
+            if (student.getStudentId().equals(id)) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    public void updateStudent(String id, String newName, double newGpa) {
+        Student student = getStudentById(id);
+        if (student != null) {
+            student.setName(newName);
+            student.setGpa(newGpa);
+            System.out.println("Student updated successfully.");
+        } else {
+            System.out.println("Student with ID " + id + " not found.");
+        }
+    }
+
+    public void deleteStudent(String id) {
+        Student student = getStudentById(id);
+        if (student != null) {
+            this.students.remove(student);
+            System.out.println("Student deleted successfully.");
+        } else {
+            System.out.println("Student with ID " + id + " not found.");
+        }
+    }
+
+    // Merge Sort Algorithm
+    public void sortStudentsById() {
+        this.students = mergeSort(this.students);
+        System.out.println("Students sorted by ID using Merge Sort.");
+    }
+
+    private List<Student> mergeSort(List<Student> list) {
+        if (list.size() <= 1) {
+            return list;
+        }
+
+        int mid = list.size() / 2;
+        List<Student> left = mergeSort(new ArrayList<>(list.subList(0, mid)));
+        List<Student> right = mergeSort(new ArrayList<>(list.subList(mid, list.size())));
+
+        return merge(left, right);
+    }
+
+    private List<Student> merge(List<Student> left, List<Student> right) {
+        List<Student> mergedList = new ArrayList<>();
+        int leftIndex = 0;
+        int rightIndex = 0;
+
+        while (leftIndex < left.size() && rightIndex < right.size()) {
+            if (left.get(leftIndex).getStudentId().compareTo(right.get(rightIndex).getStudentId()) < 0) {
+                mergedList.add(left.get(leftIndex++));
+            } else {
+                mergedList.add(right.get(rightIndex++));
+            }
+        }
+
+        mergedList.addAll(left.subList(leftIndex, left.size()));
+        mergedList.addAll(right.subList(rightIndex, right.size()));
+
+        return mergedList;
+    }
+
+    public Student findStudentById(String id) {
+        // Binary search requires a sorted list.
+        sortStudentsById();
+
+        int low = 0;
+        int high = students.size() - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            String midId = students.get(mid).getStudentId();
+            int comparisonResult = midId.compareTo(id);
+
+            if (comparisonResult == 0) {
+                return students.get(mid);
+            } else if (comparisonResult < 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return null;
+    }
+
+    // Ranking Method
+    public String getRanking(Student student) {
+        if (student.getGpa() >= 3.6) {
+            return "Excellent";
+        } else if (student.getGpa() >= 3.2) {
+            return "Good";
+        } else if (student.getGpa() >= 2.5) {
+            return "Fair";
+        } else {
+            return "Poor";
+        }
+    }
+
+    public void printAllStudents() {
+        if (students.isEmpty()) {
+            System.out.println("No students in the list.");
+        } else {
+            System.out.println("--- Student List ---");
+            for (Student student : students) {
+                System.out.println(student.toString() + ", Ranking: " + getRanking(student));
+            }
+            System.out.println("--------------------");
+        }
+    }
+}
+
+
+
