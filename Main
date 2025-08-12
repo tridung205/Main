@@ -1,0 +1,77 @@
+package org.example;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        StudentManager manager = new StudentManager();
+        Scanner scanner = new Scanner(System.in);
+
+        // Add some sample students
+        manager.addStudent(new Student("SV003", "Nguyen Van C", 3.7));
+        manager.addStudent(new Student("SV001", "Tran Thi A", 3.5));
+        manager.addStudent(new Student("SV002", "Le Van B", 2.8));
+
+        while (true) {
+            System.out.println("\n--- Student Management System Menu ---");
+            System.out.println("1. Add a new student");
+            System.out.println("2. Update student information");
+            System.out.println("3. Delete a student");
+            System.out.println("4. Find a student by ID (Binary Search)");
+            System.out.println("5. Print all students (Sorted by ID)");
+            System.out.println("6. Exit");
+            System.out.print("Please choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Student ID: ");
+                    String id = scanner.nextLine();
+                    System.out.print("Enter Student Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter GPA: ");
+                    double gpa = scanner.nextDouble();
+                    scanner.nextLine();
+                    manager.addStudent(new Student(id, name, gpa));
+                    break;
+                case 2:
+                    System.out.print("Enter Student ID to update: ");
+                    String updateId = scanner.nextLine();
+                    System.out.print("Enter new Name: ");
+                    String newName = scanner.nextLine();
+                    System.out.print("Enter new GPA: ");
+                    double newGpa = scanner.nextDouble();
+                    scanner.nextLine();
+                    manager.updateStudent(updateId, newName, newGpa);
+                    break;
+                case 3:
+                    System.out.print("Enter Student ID to delete: ");
+                    String deleteId = scanner.nextLine();
+                    manager.deleteStudent(deleteId);
+                    break;
+                case 4:
+                    System.out.print("Enter Student ID to find: ");
+                    String findId = scanner.nextLine();
+                    Student foundStudent = manager.findStudentById(findId);
+                    if (foundStudent != null) {
+                        System.out.println("Student found: " + foundStudent);
+                        System.out.println("Ranking: " + manager.getRanking(foundStudent));
+                    } else {
+                        System.out.println("Student with ID " + findId + " not found.");
+                    }
+                    break;
+                case 5:
+                    manager.sortStudentsById();
+                    manager.printAllStudents();
+                    break;
+                case 6:
+                    System.out.println("Exiting program. Goodbye!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+}
